@@ -62,15 +62,50 @@ export const manifest = {
             ],
         },
         {
-            name: 'interactive-stairs-screen',
+            name: 'repair-stairs-screen',
             assets: [
                 {
                     name: 'button-repair',
                     srcs: './assets/button_repair.png',
-                    pos: [30, 5],
+                    pos: [30, 5],                       // pox[0] - percents by x, pox[1] - percents by y,
                     options: {
-                        waiting: 2,                 // waiting is time of show sprite
-                        firstAction: 'shaking'       // func after spawn
+                        waiting: 2,                     // waiting is time of show sprite
+                        firstAction: 'moveUpDown'       // func after spawn
+                    }
+                },
+            ]
+        },
+        {
+            name: 'interactive-stairs-screen',
+            assets: [
+                {
+                    name: 'circle-blue-stairs',
+                    srcs: './assets/circle_blue_stairs.png',
+                    pos: [16, 0],
+                    options: {
+                        alpha: 1,
+                        // scale: 0.5,
+                        firstAction: 'bubble'
+                    }
+                },
+                {
+                    name: 'circle-gold-stairs',
+                    srcs: './assets/circle_gold_stairs.png',
+                    pos: [25, -15],
+                    options: {
+                        alpha: 1,
+                        // scale: 0.5,
+                        firstAction: 'bubble'
+                    }
+                },
+                {
+                    name: 'circle-green-stairs',
+                    srcs: './assets/circle_green_stairs.png',
+                    pos: [36, -20],
+                    options: {
+                        alpha: 1,
+                        // scale: 0.5,
+                        firstAction: 'bubble'
                     }
                 },
             ],

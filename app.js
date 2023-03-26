@@ -15,14 +15,9 @@ export const App = {
 
         await Assets.loadBundle('back-screen');
         await Assets.loadBundle('furniture-screen');
+        await Assets.loadBundle('repair-stairs-screen');
         await Assets.loadBundle('interactive-stairs-screen');
 
-        this.buildGame();
-        this.addEventListeners();
-        return true;
-    },
-
-    buildGame() {
         this.game = new Application({
             hello: true,
             backgroundColor: '#000000',
@@ -31,6 +26,11 @@ export const App = {
             width: this.screenWidth,
             height: this.screenHeight
         });
+
+        this.buildGame();
+    },
+
+    buildGame() {
         document.body.appendChild(this.game.view);
 
         this.setPositionStage();
@@ -39,10 +39,14 @@ export const App = {
         // create start scene
         this.createBundleAssets(this.getAssetsBundleByName('furniture-screen'));
         // create interactive btns
-        this.createBundleAssets(this.getAssetsBundleByName('interactive-stairs-screen'));
-        // console.log(this)
+        this.createBundleAssets(this.getAssetsBundleByName('repair-stairs-screen'));
 
         this.resize();
+        this.addEventListeners();
+    },
+
+    setPositionStage() {
+        this.game.stage.position.set(this.screenWidth / 2, this.screenHeight / 2);
     },
 
     resize() {
@@ -68,33 +72,24 @@ export const App = {
         this.game.view.style.marginTop = this.game.view.style.marginBottom = `${verticalMargin}px`;
     },
 
-    setPositionStage() {
-        this.game.stage.position.set(this.screenWidth / 2, this.screenHeight / 2);
+    /**
+     * @param {string} name
+     * @return {Object[]}
+     */
+    getAssetsBundleByName(name) {
+        return manifest.bundles.filter(value => value.name === name)?.[0]?.assets;
     },
 
     addEventListeners() {
         window.addEventListener('resize', (e) => {
             requestAnimationFrame(() => this.resize());
         }, true);
-    },
 
-    /**
-     * @param {Object} assetsData
-     */
-    createBaseContainer(assetsData) {
-        const container = new BaseContainer(assetsData);
-        if ('pos' in assetsData) {
-            const [x, y] = this.convertPercentToPixel(assetsData.pos)
-            container.setPosition(x, y);
-        }
-        this.game.stage.addChild(container.view);
-        this.containers.set(assetsData.name, container);
-    },
-
-    convertPercentToPixel(percent) {
-        const x = ((percent[0] / 100) * window.innerWidth).toFixed(2);
-        const y = ((percent[1] / 100) * window.innerHeight).toFixed(2);
-        return [x, y];
+        const btnRepairContainer = this.containers.get('button-repair');
+        btnRepairContainer.onclick = function () {
+            arguments[0].destroy();
+            this.changeStairs();
+        }.bind(this, btnRepairContainer);
     },
 
     /**
@@ -107,10 +102,36 @@ export const App = {
     },
 
     /**
-     * @param {string} name
-     * @return {Object[]}
+     * @param {Object} assetsData
      */
-    getAssetsBundleByName(name) {
-        return manifest.bundles.filter(value => value.name === name)?.[0]?.assets;
+    createBaseContainer(assetsData) {
+        const container = new BaseContainer(assetsData);
+        if ('pos' in assetsData) {
+            const [x, y] = this.convertPercentToPixel(assetsData.pos)
+            container.setPosition(x, y);
+        }
+        this.game.stage.addChild(container);
+        this.containers.set(assetsData.name, container);
+    },
+
+    convertPercentToPixel(percent) {
+        const x = ((percent[0] / 100) * window.innerWidth).toFixed(2);
+        const y = ((percent[1] / 100) * window.innerHeight).toFixed(2);
+        return [x, y];
+    },
+
+    changeStairs() {
+        this.createBundleAssets(this.getAssetsBundleByName('interactive-stairs-screen'));
+        const blueCircle = this.containers.get(`circle-blue-stairs`);
+        const goldCircle = this.containers.get(`circle-gold-stairs`);
+        const greenCircle = this.containers.get(`circle-green-stairs`);
+
+        blueCircle.onclick = function () {
+            console.log(this.sprite.x,this.sprite.y)
+        };
+        blueCircle.onclick = function () {
+            console.log(this.sprite.x,this.sprite.y)
+        };
+        console.log(blueCircle)
     }
 }
