@@ -1,4 +1,4 @@
-import {Assets, Application, autoDetectRenderer} from "./pixi.min.mjs";
+import {Assets, Application} from "./pixi.min.mjs";
 import {manifest} from "./manifest.js";
 import {BaseContainer} from "./container.js";
 

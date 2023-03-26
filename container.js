@@ -1,8 +1,7 @@
 import * as PIXI from "./pixi.min.mjs";
 import {Actions} from "./actions.js";
-import {Container} from "./pixi.min.mjs";
 
-export class BaseContainer extends Container {
+export class BaseContainer extends PIXI.Container {
     constructor(assetsData) {
         super();
         this.view = new PIXI.Container();
