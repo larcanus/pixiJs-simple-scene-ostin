@@ -24,7 +24,7 @@ export const manifest = {
                     pos: [35, -12],
                 },
                 {
-                    name: 'stairs_old',
+                    name: 'stairs',
                     srcs: './assets/stairs.png',
                     pos: [41, 10],
                 },
@@ -37,7 +37,7 @@ export const manifest = {
                 {
                     name: 'vase3',
                     srcs: './assets/vase_2.png',
-                    pos: [45, 30],
+                    pos: [45, 34],
                 },
                 {
                     name: 'stand',
@@ -119,6 +119,21 @@ export const manifest = {
             name: 'change-stairs',
             assets: [
                 {
+                    name: 'change-stairs-blue',
+                    srcs: './assets/stairs_blue.png',
+                    pos: [35, 0],
+                },
+                {
+                    name: 'change-stairs-green',
+                    srcs: './assets/stairs_green.png',
+                    pos: [35, 0],
+                },
+                {
+                    name: 'change-stairs-gold',
+                    srcs: './assets/stairs_gold.png',
+                    pos: [35, 0],
+                },
+                {
                     name: 'change-circle-gold',
                     srcs: './assets/choose_gold.png',
                 },
@@ -134,6 +149,7 @@ export const manifest = {
                     name: 'change-button-ok',
                     srcs: './assets/button_ok.png',
                 },
+
             ],
         },
         {

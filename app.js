@@ -7,6 +7,12 @@ export const App = {
      * @type {Map<string,Object>} - hash created containers by name
      */
     containers: new Map(),
+
+    /**
+     * @type {string} - current selected stairs name
+     */
+    selectedStairs: '',
+
     screenWidth: Math.max(document.documentElement.clientWidth, window.innerWidth || 0),
     screenHeight: Math.max(document.documentElement.clientHeight, window.innerHeight || 0),
 
@@ -104,9 +110,9 @@ export const App = {
 
     /**
      * @param {Object} assetsData
-     * @param {number[]} [pos]
+     * @param {number[]} [pos = [0,0]]
      */
-    createBaseContainer(assetsData, pos) {
+    createBaseContainer(assetsData, pos = [0, 0]) {
         const container = new BaseContainer(assetsData);
         const position = assetsData.pos ?? pos;
         const [x, y] = this.convertPercentToPixel(position)
@@ -121,65 +127,90 @@ export const App = {
         return [x, y];
     },
 
-    currentStairs: null,
-
     changeStairs() {
         this.createBundleAssets(this.getAssetsBundleByName('circle-stairs'));
         const blueCircle = this.containers.get(`circle-blue-stairs`);
         const goldCircle = this.containers.get(`circle-gold-stairs`);
         const greenCircle = this.containers.get(`circle-green-stairs`);
-        console.log(this)
         blueCircle.sprite.onclick = () => {
-            this.currentStairs = 'blue';
-            this.addChangeStairs();
+            this.selectedStairs = 'blue';
+            this.addChangeStairsContainers();
         }
         goldCircle.sprite.onclick = () => {
-            this.currentStairs = 'gold';
-            this.addChangeStairs();
+            this.selectedStairs = 'gold';
+            this.addChangeStairsContainers();
         };
         greenCircle.sprite.onclick = () => {
-            this.currentStairs = 'green';
-            this.addChangeStairs();
+            this.selectedStairs = 'green';
+            this.addChangeStairsContainers();
         };
-
-
     },
 
-    addChangeStairs() {
-        this.removeChangeStairs();
-        const assetsChange = this.getAssetsBundleByName('change-stairs');
-        const assetsCircle = this.getAssetsBundleByName(`circle-stairs`)
-        const changeCircle = assetsCircle.filter(asset => asset.name === `circle-${this.currentStairs}-stairs`)?.[0];
-        const containerCircle = this.containers.get(`circle-${this.currentStairs}-stairs`)
+    addChangeStairsContainers() {
+        this.removeChangeStairsContainers();
+        const assetsChange = this.getAssetsBundleByName('change-stairs').filter(asset => {
+            if (asset.name.endsWith(this.selectedStairs)) {
+                return true;
+            } else {
+                return asset.name.includes('ok');
+            }
+        });
 
-        let position = [0, 0];
+        // delete old stairs
+        const oldStairs = this.containers.get('stairs');
+        oldStairs.destroy();
+
+        const containerCircle = this.containers.get(`circle-${this.selectedStairs}-stairs`);
+        const x = containerCircle.x;
+        const y = containerCircle.y;
+
         for (const data of assetsChange) {
-
-
-
-            if (data.name.includes(`circle-${this.currentStairs}`)) {
-                this.createBaseContainer(data, position);
-                const chooseContainer = this.containers.get(data.name)
+            if (data.name.includes(`circle-${this.selectedStairs}`)) {
+                this.updateCircleChangeContainers();
+                this.createBaseContainer(data);
+                const chooseContainer = this.containers.get(data.name);
                 chooseContainer.width = containerCircle.width;
                 chooseContainer.height = containerCircle.height;
                 const midY = chooseContainer.height / 2;
-                chooseContainer.position.set(containerCircle.x + 5, containerCircle.y - midY + 2.5);
-                continue
-            }
+                chooseContainer.position.set(containerCircle.x + 5, containerCircle.y - midY + 11);
 
-            if (data.name.includes('ok')) {
-                position = [changeCircle.pos[0] + 2, changeCircle.pos[1] + 7.5];
-                this.createBaseContainer(data, position);
+            } else if (data.name.includes('ok')) {
+                this.createBaseContainer(data);
+                const chooseContainer = this.containers.get(data.name);
+                chooseContainer.width = 100;
+                chooseContainer.height = 60;
+                // chooseContainer.position.set(x + 14, y + 55);
+                chooseContainer.position.set(x + 14, y + 55);
+                chooseContainer.sprite.onclick = () => this.createFinalPlug();
+            } else {
+                this.createBaseContainer(data);
+                const chooseContainer = this.containers.get(data.name);
+                chooseContainer.width = 500;
+                chooseContainer.height = 600;
+                chooseContainer.position.set(chooseContainer.width / 2 - 40, 0 - chooseContainer.height / 2);
             }
         }
-        console.log(this.containers)
+        // update vase3 before stairs
+        this.game.stage.addChild(this.containers.get('vase3'));
     },
 
-    removeChangeStairs() {
+    removeChangeStairsContainers() {
         this.containers.forEach((container, name,) => {
             if (name.startsWith('change')) {
                 container.destroy();
             }
         });
+    },
+
+    updateCircleChangeContainers() {
+        this.game.stage.addChild(
+            this.containers.get(`circle-green-stairs`),
+            this.containers.get(`circle-blue-stairs`),
+            this.containers.get(`circle-gold-stairs`)
+        );
+    },
+
+    createFinalPlug() {
+        console.log('final')
     }
 }
