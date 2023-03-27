@@ -15,8 +15,9 @@ export const App = {
 
         await Assets.loadBundle('back-screen');
         await Assets.loadBundle('furniture-screen');
-        await Assets.loadBundle('repair-stairs-screen');
-        await Assets.loadBundle('interactive-stairs-screen');
+        await Assets.loadBundle('repair-stairs');
+        await Assets.loadBundle('circle-stairs');
+        await Assets.loadBundle('change-stairs');
 
         this.game = new Application({
             hello: true,
@@ -39,7 +40,7 @@ export const App = {
         // create start scene
         this.createBundleAssets(this.getAssetsBundleByName('furniture-screen'));
         // create interactive btns
-        this.createBundleAssets(this.getAssetsBundleByName('repair-stairs-screen'));
+        this.createBundleAssets(this.getAssetsBundleByName('repair-stairs'));
 
         this.resize();
         this.addEventListeners();
@@ -86,7 +87,7 @@ export const App = {
         }, true);
 
         const btnRepairContainer = this.containers.get('button-repair');
-        btnRepairContainer.onclick = function () {
+        btnRepairContainer.sprite.onclick = function () {
             arguments[0].destroy();
             this.changeStairs();
         }.bind(this, btnRepairContainer);
@@ -103,13 +104,13 @@ export const App = {
 
     /**
      * @param {Object} assetsData
+     * @param {number[]} [pos]
      */
-    createBaseContainer(assetsData) {
+    createBaseContainer(assetsData, pos) {
         const container = new BaseContainer(assetsData);
-        if ('pos' in assetsData) {
-            const [x, y] = this.convertPercentToPixel(assetsData.pos)
-            container.setPosition(x, y);
-        }
+        const position = assetsData.pos ?? pos;
+        const [x, y] = this.convertPercentToPixel(position)
+        container.setPosition(x, y);
         this.game.stage.addChild(container);
         this.containers.set(assetsData.name, container);
     },
@@ -120,18 +121,65 @@ export const App = {
         return [x, y];
     },
 
+    currentStairs: null,
+
     changeStairs() {
-        this.createBundleAssets(this.getAssetsBundleByName('interactive-stairs-screen'));
+        this.createBundleAssets(this.getAssetsBundleByName('circle-stairs'));
         const blueCircle = this.containers.get(`circle-blue-stairs`);
         const goldCircle = this.containers.get(`circle-gold-stairs`);
         const greenCircle = this.containers.get(`circle-green-stairs`);
+        console.log(this)
+        blueCircle.sprite.onclick = () => {
+            this.currentStairs = 'blue';
+            this.addChangeStairs();
+        }
+        goldCircle.sprite.onclick = () => {
+            this.currentStairs = 'gold';
+            this.addChangeStairs();
+        };
+        greenCircle.sprite.onclick = () => {
+            this.currentStairs = 'green';
+            this.addChangeStairs();
+        };
 
-        blueCircle.onclick = function () {
-            console.log(this.sprite.x,this.sprite.y)
-        };
-        blueCircle.onclick = function () {
-            console.log(this.sprite.x,this.sprite.y)
-        };
-        console.log(blueCircle)
+
+    },
+
+    addChangeStairs() {
+        this.removeChangeStairs();
+        const assetsChange = this.getAssetsBundleByName('change-stairs');
+        const assetsCircle = this.getAssetsBundleByName(`circle-stairs`)
+        const changeCircle = assetsCircle.filter(asset => asset.name === `circle-${this.currentStairs}-stairs`)?.[0];
+        const containerCircle = this.containers.get(`circle-${this.currentStairs}-stairs`)
+
+        let position = [0, 0];
+        for (const data of assetsChange) {
+
+
+
+            if (data.name.includes(`circle-${this.currentStairs}`)) {
+                this.createBaseContainer(data, position);
+                const chooseContainer = this.containers.get(data.name)
+                chooseContainer.width = containerCircle.width;
+                chooseContainer.height = containerCircle.height;
+                const midY = chooseContainer.height / 2;
+                chooseContainer.position.set(containerCircle.x + 5, containerCircle.y - midY + 2.5);
+                continue
+            }
+
+            if (data.name.includes('ok')) {
+                position = [changeCircle.pos[0] + 2, changeCircle.pos[1] + 7.5];
+                this.createBaseContainer(data, position);
+            }
+        }
+        console.log(this.containers)
+    },
+
+    removeChangeStairs() {
+        this.containers.forEach((container, name,) => {
+            if (name.startsWith('change')) {
+                container.destroy();
+            }
+        });
     }
 }

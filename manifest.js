@@ -14,6 +14,11 @@ export const manifest = {
             name: 'furniture-screen',
             assets: [
                 {
+                    name: 'logo',
+                    srcs: './assets/logo.png',
+                    pos: [-38, -40],
+                },
+                {
                     name: 'vase2',
                     srcs: './assets/vase_1.png',
                     pos: [35, -12],
@@ -62,7 +67,7 @@ export const manifest = {
             ],
         },
         {
-            name: 'repair-stairs-screen',
+            name: 'repair-stairs',
             assets: [
                 {
                     name: 'button-repair',
@@ -76,7 +81,7 @@ export const manifest = {
             ]
         },
         {
-            name: 'interactive-stairs-screen',
+            name: 'circle-stairs',
             assets: [
                 {
                     name: 'circle-blue-stairs',
@@ -107,6 +112,27 @@ export const manifest = {
                         // scale: 0.5,
                         firstAction: 'bubble'
                     }
+                },
+            ],
+        },
+        {
+            name: 'change-stairs',
+            assets: [
+                {
+                    name: 'change-circle-gold',
+                    srcs: './assets/choose_gold.png',
+                },
+                {
+                    name: 'change-circle-blue',
+                    srcs: './assets/choose_blue.png',
+                },
+                {
+                    name: 'change-circle-green',
+                    srcs: './assets/choose_green.png',
+                },
+                {
+                    name: 'change-button-ok',
+                    srcs: './assets/button_ok.png',
                 },
             ],
         },
