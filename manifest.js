@@ -26,7 +26,7 @@ export const manifest = {
                 {
                     name: 'stairs',
                     srcs: './assets/stairs.png',
-                    pos: [41, 10],
+                    pos: [35, 10],
                 },
                 {
                     name: 'vase1',
@@ -121,17 +121,17 @@ export const manifest = {
                 {
                     name: 'change-stairs-blue',
                     srcs: './assets/stairs_blue.png',
-                    pos: [35, 0],
+
                 },
                 {
                     name: 'change-stairs-green',
                     srcs: './assets/stairs_green.png',
-                    pos: [35, 0],
+
                 },
                 {
                     name: 'change-stairs-gold',
                     srcs: './assets/stairs_gold.png',
-                    pos: [35, 0],
+
                 },
                 {
                     name: 'change-circle-gold',

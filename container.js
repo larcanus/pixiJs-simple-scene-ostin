@@ -13,7 +13,7 @@ export class BaseContainer extends PIXI.Container {
         this.sprite.eventMode = 'static';
         this.sprite.buttonMode = true;
 
-        this.setScaleByCurrentScaleWin();
+        // this.setScaleByCurrentScaleWin(); // TODO need?
         this.create(assetsData.options);
         this.firstAction(assetsData?.options?.firstAction);
     }
@@ -41,7 +41,7 @@ export class BaseContainer extends PIXI.Container {
 
     setScaleByCurrentScaleWin() {
         this.sprite.scale.x *= window.innerWidth / window.screen.availWidth;
-        this.sprite.scale.y *= window.innerHeight / window.screen.availHeight + 0.15;
+        this.sprite.scale.y *= window.innerHeight / window.screen.availHeight;
     }
 
     firstAction(funcName) {

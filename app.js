@@ -12,7 +12,8 @@ export const App = {
      * @type {string} - current selected stairs name
      */
     selectedStairs: '',
-
+    width: 1350,
+    height: 640,
     screenWidth: Math.max(document.documentElement.clientWidth, window.innerWidth || 0),
     screenHeight: Math.max(document.documentElement.clientHeight, window.innerHeight || 0),
 
@@ -27,11 +28,12 @@ export const App = {
 
         this.game = new Application({
             hello: true,
+            view: document.getElementById('canvas'),
             backgroundColor: '#000000',
             resolution: window.devicePixelRatio || 1,
             autoDensity: true,
-            width: this.screenWidth,
-            height: this.screenHeight
+            width: this.width,
+            height: this.height
         });
 
         this.buildGame();
@@ -50,10 +52,12 @@ export const App = {
 
         this.resize();
         this.addEventListeners();
+
+        document.getElementById('canvas').classList.add('visible');
     },
 
     setPositionStage() {
-        this.game.stage.position.set(this.screenWidth / 2, this.screenHeight / 2);
+        this.game.stage.position.set(this.width / 2, this.height / 2);
     },
 
     resize() {
@@ -62,22 +66,24 @@ export const App = {
         const screenHeight = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
 
         // uniform scale for our game
-        const scale = Math.min(screenWidth / this.screenWidth, screenHeight / this.screenHeight);
+        const scale = Math.min(screenWidth / this.width, screenHeight / this.height);
 
         // the "uniformly englarged" size for our game
-        const enlargedWidth = Math.floor(scale * this.screenWidth);
-        const enlargedHeight = Math.floor(scale * this.screenHeight);
+        const enlargedWidth = Math.floor(scale * this.width);
+        const enlargedHeight = Math.floor(scale * this.height);
 
         // margins for centering our game
         const horizontalMargin = (screenWidth - enlargedWidth) / 2;
         const verticalMargin = (screenHeight - enlargedHeight) / 2;
 
         // now we use css trickery to set the sizes and margins
+        console.log(`${enlargedWidth}px`)
         this.game.view.style.width = `${enlargedWidth}px`;
         this.game.view.style.height = `${enlargedHeight}px`;
         this.game.view.style.marginLeft = this.game.view.style.marginRight = `${horizontalMargin}px`;
         this.game.view.style.marginTop = this.game.view.style.marginBottom = `${verticalMargin}px`;
     },
+
 
     /**
      * @param {string} name
@@ -122,8 +128,8 @@ export const App = {
     },
 
     convertPercentToPixel(percent) {
-        const x = ((percent[0] / 100) * window.innerWidth).toFixed(2);
-        const y = ((percent[1] / 100) * window.innerHeight).toFixed(2);
+        const x = ((percent[0] / 100) * this.width).toFixed(2);
+        const y = ((percent[1] / 100) * this.height).toFixed(2);
         return [x, y];
     },
 
@@ -165,6 +171,7 @@ export const App = {
         const y = containerCircle.y;
 
         for (const data of assetsChange) {
+            // TODO this code is old solution, need remove digits and percents, and position by hardcode
             if (data.name.includes(`circle-${this.selectedStairs}`)) {
                 this.updateCircleChangeContainers();
                 this.createBaseContainer(data);
@@ -172,22 +179,22 @@ export const App = {
                 chooseContainer.width = containerCircle.width;
                 chooseContainer.height = containerCircle.height;
                 const midY = chooseContainer.height / 2;
-                chooseContainer.position.set(containerCircle.x + 5, containerCircle.y - midY + 11);
+                chooseContainer.position.set(containerCircle.x + 5, containerCircle.y - midY + 4);
 
             } else if (data.name.includes('ok')) {
                 this.createBaseContainer(data);
                 const chooseContainer = this.containers.get(data.name);
                 chooseContainer.width = 100;
                 chooseContainer.height = 60;
-                // chooseContainer.position.set(x + 14, y + 55);
-                chooseContainer.position.set(x + 14, y + 55);
+                chooseContainer.position.set(x + 16, y + 55);
                 chooseContainer.sprite.onclick = () => this.createFinalPlug();
             } else {
-                this.createBaseContainer(data);
+                this.createBaseContainer(data, [35, 1]);
                 const chooseContainer = this.containers.get(data.name);
-                chooseContainer.width = 500;
-                chooseContainer.height = 600;
-                chooseContainer.position.set(chooseContainer.width / 2 - 40, 0 - chooseContainer.height / 2);
+                chooseContainer.width = 560;
+                chooseContainer.height = 640;
+                const [x, y] = this.convertPercentToPixel([34, 0])
+                chooseContainer.setPosition(x, y);
             }
         }
         // update vase3 before stairs
