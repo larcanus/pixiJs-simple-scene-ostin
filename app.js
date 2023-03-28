@@ -1,4 +1,4 @@
-import {Assets, Application} from "./pixi.min.mjs";
+import {Assets, Application, Text} from "./pixi.min.mjs";
 import {manifest} from "./manifest.js";
 import {BaseContainer} from "./container.js";
 import * as TWEEDLE from "./tweedle.es.min.js";
@@ -14,6 +14,10 @@ export const App = {
      * @type {string} - current selected stairs name
      */
     selectedStairs: '',
+
+    /**
+     * @type {number}
+     */
     width: 1350,
     height: 640,
     screenWidth: Math.max(document.documentElement.clientWidth, window.innerWidth || 0),
@@ -56,9 +60,9 @@ export const App = {
 
         this.resize();
         this.addEventListeners();
+        this.addSign();
 
         document.getElementById('canvas').classList.add('visible');
-
     },
 
     setPositionStage() {
@@ -131,9 +135,13 @@ export const App = {
         this.containers.set(assetsData.name, container);
     },
 
+    /**
+     * @param {number[]} percent
+     * @return {number[]}
+     */
     convertPercentToPixel(percent) {
-        const x = ((percent[0] / 100) * this.width).toFixed(2);
-        const y = ((percent[1] / 100) * this.height).toFixed(2);
+        const x = Math.round(((percent[0] / 100) * this.width));
+        const y = Math.round(((percent[1] / 100) * this.height));
         return [x, y];
     },
 
@@ -235,5 +243,13 @@ export const App = {
         const btnContinueContainer = this.containers.get(`button-continue`);
         Actions.twPulse.call(btnContinueContainer);
         btnContinueContainer.sprite.onclick = () => console.log('continue');
+    },
+
+    addSign() {
+        const basicText = new Text('Created Alexey Rylkov');
+        basicText.x = -650;
+        basicText.y = 260;
+        basicText.alpha = 0.5;
+        this.game.stage.addChild(basicText);
     }
 }

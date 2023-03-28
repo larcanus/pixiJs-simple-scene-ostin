@@ -89,7 +89,6 @@ export const manifest = {
                     pos: [16, 0],
                     options: {
                         alpha: 1,
-                        // scale: 0.5,
                         firstAction: 'bubble'
                     }
                 },
@@ -99,7 +98,6 @@ export const manifest = {
                     pos: [25, -15],
                     options: {
                         alpha: 1,
-                        // scale: 0.5,
                         firstAction: 'bubble'
                     }
                 },
@@ -109,7 +107,6 @@ export const manifest = {
                     pos: [36, -20],
                     options: {
                         alpha: 1,
-                        // scale: 0.5,
                         firstAction: 'bubble'
                     }
                 },
