@@ -1,6 +1,8 @@
 import {Assets, Application} from "./pixi.min.mjs";
 import {manifest} from "./manifest.js";
 import {BaseContainer} from "./container.js";
+import * as TWEEDLE from "./tweedle.es.min.js";
+import {Actions} from "./actions.js";
 
 export const App = {
     /**
@@ -25,6 +27,7 @@ export const App = {
         await Assets.loadBundle('repair-stairs');
         await Assets.loadBundle('circle-stairs');
         await Assets.loadBundle('change-stairs');
+        await Assets.loadBundle('final-screen');
 
         this.game = new Application({
             hello: true,
@@ -35,6 +38,7 @@ export const App = {
             width: this.width,
             height: this.height
         });
+        this.game.ticker.add(() => TWEEDLE.Group.shared.update());
 
         this.buildGame();
     },
@@ -54,6 +58,7 @@ export const App = {
         this.addEventListeners();
 
         document.getElementById('canvas').classList.add('visible');
+
     },
 
     setPositionStage() {
@@ -77,7 +82,6 @@ export const App = {
         const verticalMargin = (screenHeight - enlargedHeight) / 2;
 
         // now we use css trickery to set the sizes and margins
-        console.log(`${enlargedWidth}px`)
         this.game.view.style.width = `${enlargedWidth}px`;
         this.game.view.style.height = `${enlargedHeight}px`;
         this.game.view.style.marginLeft = this.game.view.style.marginRight = `${horizontalMargin}px`;
@@ -179,21 +183,21 @@ export const App = {
                 chooseContainer.width = containerCircle.width;
                 chooseContainer.height = containerCircle.height;
                 const midY = chooseContainer.height / 2;
-                chooseContainer.position.set(containerCircle.x + 5, containerCircle.y - midY + 4);
+                chooseContainer.position.set(containerCircle.x + 10, containerCircle.y - midY - 4);
 
             } else if (data.name.includes('ok')) {
                 this.createBaseContainer(data);
                 const chooseContainer = this.containers.get(data.name);
                 chooseContainer.width = 100;
                 chooseContainer.height = 60;
-                chooseContainer.position.set(x + 16, y + 55);
+                chooseContainer.position.set(x + 16, y + 45);
                 chooseContainer.sprite.onclick = () => this.createFinalPlug();
             } else {
                 this.createBaseContainer(data, [35, 1]);
                 const chooseContainer = this.containers.get(data.name);
                 chooseContainer.width = 560;
                 chooseContainer.height = 640;
-                const [x, y] = this.convertPercentToPixel([34, 0])
+                const [x, y] = this.convertPercentToPixel([34, -17])
                 chooseContainer.setPosition(x, y);
             }
         }
@@ -209,6 +213,14 @@ export const App = {
         });
     },
 
+    removeChangeCircles() {
+        this.containers.forEach((container, name,) => {
+            if (name.includes('circle') || name.includes('ok')) {
+                container.destroy();
+            }
+        });
+    },
+
     updateCircleChangeContainers() {
         this.game.stage.addChild(
             this.containers.get(`circle-green-stairs`),
@@ -218,6 +230,10 @@ export const App = {
     },
 
     createFinalPlug() {
-        console.log('final')
+        this.removeChangeCircles();
+        this.createBundleAssets(this.getAssetsBundleByName('final-screen'));
+        const btnContinueContainer = this.containers.get(`button-continue`);
+        Actions.twPulse.call(btnContinueContainer);
+        btnContinueContainer.sprite.onclick = () => console.log('continue');
     }
 }

@@ -121,16 +121,28 @@ export const manifest = {
                 {
                     name: 'change-stairs-blue',
                     srcs: './assets/stairs_blue.png',
+                    options: {
+                        alpha: 0,
+                        firstAction: 'twDownEasing'
+                    }
 
                 },
                 {
                     name: 'change-stairs-green',
                     srcs: './assets/stairs_green.png',
+                    options: {
+                        alpha: 0,
+                        firstAction: 'twDownEasing'
+                    }
 
                 },
                 {
                     name: 'change-stairs-gold',
                     srcs: './assets/stairs_gold.png',
+                    options: {
+                        alpha: 0,
+                        firstAction: 'twDownEasing'
+                    }
 
                 },
                 {
@@ -144,6 +156,7 @@ export const manifest = {
                 {
                     name: 'change-circle-green',
                     srcs: './assets/choose_green.png',
+
                 },
                 {
                     name: 'change-button-ok',
@@ -156,12 +169,31 @@ export const manifest = {
             name: 'final-screen',
             assets: [
                 {
+                    name: 'back',
+                    srcs: './assets/back.png',
+                    options: {
+                        alpha: 0,
+                        firstAction: 'twToShowByHalfAlpha'
+                    },
+                    pos: [0, 0],
+                },
+                {
                     name: 'plug-continue',
                     srcs: './assets/plug_continue.png',
+                    pos: [0, -15],
+                    options: {
+                        alpha: 0,
+                        firstAction: 'twToShowByAlpha'
+                    },
                 },
                 {
                     name: 'button-continue',
                     srcs: './assets/button_continue.png',
+                    pos: [0, 30],
+                    options: {
+                        alpha: 0,
+                        firstAction: 'twToShowByAlpha'
+                    },
                 },
             ],
         },

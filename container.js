@@ -19,8 +19,8 @@ export class BaseContainer extends PIXI.Container {
     }
 
     create(options) {
-        this.alpha = options?.alpha ?? 1;
-        if(options?.scale){
+        this.sprite.alpha = options?.alpha ?? 1;
+        if (options?.scale) {
             this.sprite.scale.x = options.scale;
             this.sprite.scale.y = options.scale;
         }
@@ -47,10 +47,13 @@ export class BaseContainer extends PIXI.Container {
     firstAction(funcName) {
         if (funcName && Actions[funcName]) {
             this.actions[funcName] = Actions[funcName].apply(this);
-            this.ticker.add(this.actions[funcName]);
-            this.ticker.start();
+            if (!funcName.startsWith('tw')) {
+                this.ticker.add(this.actions[funcName]);
+                this.ticker.start();
+            }
         }
     }
 
-    onclick() {}
+    onclick() {
+    }
 }
